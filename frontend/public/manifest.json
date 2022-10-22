@@ -1,0 +1,8 @@
+{
+  "name": "pwFlipper",
+  "lang": "en-US",
+  "start_url": "/",
+
+  "display": "standalone",
+  "background_color": "#000"
+}
