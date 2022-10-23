@@ -1,3 +1,3 @@
-# my.flipper.net
+# pwFlipper
 
-Web platform for your Flipper
+Progressive web application to work with your Flipper
