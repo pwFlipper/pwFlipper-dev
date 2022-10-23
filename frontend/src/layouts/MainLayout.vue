@@ -23,19 +23,8 @@
 
         <template v-if="flags.serialSupported">
           <q-btn
-            v-if="flags.portSelectRequired || !flags.connected && !flags.portSelectRequired"
-            @click="flags.portSelectRequired ? selectPort() : start(true)"
             outline
-            class="q-mx-sm"
-          >
-            Connect
-          </q-btn>
-          <q-btn
-            v-else-if="this.info"
-            outline
-            class="q-mx-sm"
             icon="tune"
-            :label="info.hardware_name"
           >
           <q-menu :offset="[0, 10]">
             <div class="row no-wrap q-pa-md">
@@ -57,9 +46,25 @@
                   label="3rd party firmware install"
                 ></q-toggle>
               </div>
-
-              <q-separator vertical inset class="q-mx-lg"></q-separator>
-
+            </div>
+          </q-menu>
+          </q-btn>
+          <q-btn
+            v-if="flags.portSelectRequired || !flags.connected && !flags.portSelectRequired"
+            @click="flags.portSelectRequired ? selectPort() : start(true)"
+            outline
+            class="q-mx-sm"
+          >
+            Connect
+          </q-btn>
+          <q-btn
+            v-else-if="this.info"
+            outline
+            class="q-mx-sm"
+            :label="info.hardware_name"
+          >
+          <q-menu :offset="[0, 10]">
+            <div class="row no-wrap q-pa-md">
               <div class="column items-center">
                 <q-avatar size="72px" square>
                   <img v-if="info.hardware_color === '1'" src="../assets/flipper_black.svg"/>
