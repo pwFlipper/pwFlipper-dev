@@ -108,7 +108,7 @@
           </q-menu>
         </q-btn>
         <template v-else>
-          <q-separator v-if="flags.serialSupported" dark vertical inset class="q-mx-lg"></q-separator>
+          <q-separator v-if="flags.serialSupported && extLinks.length > 0" dark vertical inset class="q-mx-lg"></q-separator>
           <div class="nav-links">
             <a v-for="link in extLinks"
               :key="link.title"
@@ -288,31 +288,31 @@ export default defineComponent({
         }
       ],
       extLinks: [
-        {
-          title: 'Home',
-          icon: 'open_in_new',
-          link: 'https://flipperzero.one/'
-        },
-        {
-          title: 'Shop',
-          icon: 'open_in_new',
-          link: 'https://shop.flipperzero.one/'
-        },
-        {
-          title: 'FAQ',
-          icon: 'open_in_new',
-          link: 'https://flipperzero.one/faq/'
-        },
-        {
-          title: 'Blog',
-          icon: 'open_in_new',
-          link: 'https://blog.flipperzero.one/'
-        },
-        {
-          title: 'Forum',
-          icon: 'open_in_new',
-          link: 'https://forum.flipperzero.one/'
-        }
+        // {
+        //   title: 'Home',
+        //   icon: 'open_in_new',
+        //   link: 'https://flipperzero.one/'
+        // },
+        // {
+        //   title: 'Shop',
+        //   icon: 'open_in_new',
+        //   link: 'https://shop.flipperzero.one/'
+        // },
+        // {
+        //   title: 'FAQ',
+        //   icon: 'open_in_new',
+        //   link: 'https://flipperzero.one/faq/'
+        // },
+        // {
+        //   title: 'Blog',
+        //   icon: 'open_in_new',
+        //   link: 'https://blog.flipperzero.one/'
+        // },
+        // {
+        //   title: 'Forum',
+        //   icon: 'open_in_new',
+        //   link: 'https://forum.flipperzero.one/'
+        // }
       ],
       canLoadWithoutFlipper: [
         'remote-cli',
