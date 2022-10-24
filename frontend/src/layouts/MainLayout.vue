@@ -262,9 +262,9 @@ export default defineComponent({
           link: '/'
         },
         {
-          title: 'Archive',
-          icon: 'inventory',
-          link: '/archive'
+          title: 'Files',
+          icon: 'mdi-folder-open',
+          link: '/files'
         },
         {
           title: 'CLI',

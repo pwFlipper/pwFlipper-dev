@@ -15,10 +15,10 @@ const routes = [
     ]
   },
   {
-    path: '/archive',
+    path: '/files',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/archive', component: () => import('pages/Archive.vue') }
+      { path: '/files', component: () => import('pages/Files.vue') }
     ]
   },
   {

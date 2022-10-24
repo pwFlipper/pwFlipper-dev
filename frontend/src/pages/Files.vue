@@ -276,25 +276,25 @@ import { exportFile, useQuasar } from 'quasar'
 import ProgressBar from 'components/ProgressBar.vue'
 import asyncSleep from 'simple-async-sleep'
 const flipperIcons = {
-  'archive:new': 'img:icons/flipper/action-new.svg',
-  'archive:remove': 'img:icons/flipper/action-remove.svg',
-  'archive:rename': 'img:icons/flipper/action-rename.svg',
-  'archive:save': 'img:icons/flipper/action-save.svg',
-  'archive:sdcard': 'img:icons/flipper/location-sdcard.svg',
-  'archive:internal': 'img:icons/flipper/location-internal.svg',
-  'archive:file': 'img:icons/flipper/file.svg',
-  'archive:folder': 'img:icons/flipper/folder.svg',
-  'archive:badusb': 'img:icons/flipper/badusb.svg',
-  'archive:ibutton': 'img:icons/flipper/ibutton.svg',
-  'archive:infrared': 'img:icons/flipper/infrared.svg',
-  'archive:nfc': 'img:icons/flipper/nfc.svg',
-  'archive:rfid': 'img:icons/flipper/rfid.svg',
-  'archive:subghz': 'img:icons/flipper/subghz.svg',
-  'archive:u2f': 'img:icons/flipper/u2f.svg'
+  'files:new': 'img:icons/flipper/action-new.svg',
+  'files:remove': 'img:icons/flipper/action-remove.svg',
+  'files:rename': 'img:icons/flipper/action-rename.svg',
+  'files:save': 'img:icons/flipper/action-save.svg',
+  'files:sdcard': 'img:icons/flipper/location-sdcard.svg',
+  'files:internal': 'img:icons/flipper/location-internal.svg',
+  'files:file': 'img:icons/flipper/file.svg',
+  'files:folder': 'img:icons/flipper/folder.svg',
+  'files:badusb': 'img:icons/flipper/badusb.svg',
+  'files:ibutton': 'img:icons/flipper/ibutton.svg',
+  'files:infrared': 'img:icons/flipper/infrared.svg',
+  'files:nfc': 'img:icons/flipper/nfc.svg',
+  'files:rfid': 'img:icons/flipper/rfid.svg',
+  'files:subghz': 'img:icons/flipper/subghz.svg',
+  'files:u2f': 'img:icons/flipper/u2f.svg'
 }
 
 export default defineComponent({
-  name: 'PageArchive',
+  name: 'PageFiles',
 
   components: {
     ProgressBar
@@ -357,7 +357,7 @@ export default defineComponent({
         })
         this.$emit('log', {
           level: 'error',
-          message: 'Archive: Couldn\'t start rpc session'
+          message: 'Files: Couldn\'t start rpc session'
         })
         throw new Error('Couldn\'t start rpc session')
       }
@@ -366,7 +366,7 @@ export default defineComponent({
       this.$emit('setRpcStatus', true)
       this.$emit('log', {
         level: 'info',
-        message: 'Archive: RPC started'
+        message: 'Files: RPC started'
       })
     },
     async stopRpc () {
@@ -377,7 +377,7 @@ export default defineComponent({
       this.$emit('setRpcStatus', false)
       this.$emit('log', {
         level: 'info',
-        message: 'Archive: RPC stopped'
+        message: 'Files: RPC stopped'
       })
     },
     async restartRpc (force) {
@@ -398,7 +398,7 @@ export default defineComponent({
         .finally(() => {
           this.$emit('log', {
             level: 'debug',
-            message: 'Archive: storage.list: ' + this.path
+            message: 'Files: storage.list: ' + this.path
           })
         })
       if (res.length === 0) {
@@ -431,7 +431,7 @@ export default defineComponent({
         .finally(() => {
           this.$emit('log', {
             level: 'debug',
-            message: 'Archive: storage.read: ' + path
+            message: 'Files: storage.read: ' + path
           })
         })
       const s = path.split('/')
@@ -451,7 +451,7 @@ export default defineComponent({
         .finally(() => {
           this.$emit('log', {
             level: 'debug',
-            message: `Archive: storage.remove: ${path}, recursive: ${isRecursive}`
+            message: `Files: storage.remove: ${path}, recursive: ${isRecursive}`
           })
         })
       this.list()
@@ -463,7 +463,7 @@ export default defineComponent({
         .finally(() => {
           this.$emit('log', {
             level: 'debug',
-            message: `Archive: storage.rename: ${path}, old name: ${oldName}, new name: ${newName}`
+            message: `Files: storage.rename: ${path}, old name: ${oldName}, new name: ${newName}`
           })
         })
       this.list()
@@ -475,7 +475,7 @@ export default defineComponent({
         .finally(() => {
           this.$emit('log', {
             level: 'debug',
-            message: 'Archive: storage.mkdir: ' + path
+            message: 'Files: storage.mkdir: ' + path
           })
         })
       this.list()
@@ -513,7 +513,7 @@ export default defineComponent({
           .finally(() => {
             this.$emit('log', {
               level: 'debug',
-              message: 'Archive: storage.write: ' + this.path + '/' + file.name
+              message: 'Files: storage.write: ' + this.path + '/' + file.name
             })
           })
         unbind()
@@ -554,25 +554,25 @@ export default defineComponent({
 
     itemIconSwitcher (item) {
       if (this.path === '/' && item.name === 'int') {
-        return 'archive:internal'
+        return 'files:internal'
       } else if (this.path === '/' && item.name === 'ext') {
-        return 'archive:sdcard'
+        return 'files:sdcard'
       } else if (item.type === 1) {
         return 'mdi-folder-outline'
       } else if (item.name.endsWith('.badusb')) {
-        return 'archive:badusb'
+        return 'files:badusb'
       } else if (item.name.endsWith('.ibtn')) {
-        return 'archive:ibutton'
+        return 'files:ibutton'
       } else if (item.name.endsWith('.ir')) {
-        return 'archive:infrared'
+        return 'files:infrared'
       } else if (item.name.endsWith('.nfc')) {
-        return 'archive:nfc'
+        return 'files:nfc'
       } else if (item.name.endsWith('.rfid')) {
-        return 'archive:rfid'
+        return 'files:rfid'
       } else if (item.name.endsWith('.sub')) {
-        return 'archive:subghz'
+        return 'files:subghz'
       } else if (item.name.endsWith('.u2f')) {
-        return 'archive:u2f'
+        return 'files:u2f'
       } else {
         return 'mdi-file-outline'
       }
@@ -586,7 +586,7 @@ export default defineComponent({
       })
       this.$emit('log', {
         level: 'error',
-        message: `Archive: RPC error in command '${command}': ${error}`
+        message: `Files: RPC error in command '${command}': ${error}`
       })
     },
 
