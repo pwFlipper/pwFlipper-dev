@@ -8,10 +8,16 @@
 
 .q-header
   font-size: 16px
+  app-region: drag
+  -webkit-app-region: drag
+  user-select: none
   .nav-links a
     margin: 0 0.85rem
     color: #ffffff !important
-  
+  button
+    app-region: no-drag
+    -webkit-app-region: no-drag
+
 .device-screen
   .info
     margin: 8px 3rem 0 0
@@ -76,7 +82,7 @@
   border-radius: 5px
   &.custom
     background-color: $dark
-  &.release 
+  &.release
     background-color: $positive
   &.rc
     background-color: $accent
