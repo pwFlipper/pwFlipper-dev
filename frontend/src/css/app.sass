@@ -13,8 +13,16 @@ body
 .q-header
   font-size: 16px
   app-region: drag
+  position: fixed
+  left: env(titlebar-area-x, 0)
+  top: env(titlebar-area-y, 0)
+  width: env(titlebar-area-width, 100%)
+  height: env(titlebar-area-height, 50px)
   -webkit-app-region: drag
   user-select: none
+  .q-toolbar
+    height: 100%
+    min-height: unset
   .nav-links a
     margin: 0 0.85rem
     color: #ffffff !important

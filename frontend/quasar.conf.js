@@ -151,7 +151,7 @@ module.exports = configure(function (ctx) {
         display_override: ['window-controls-overlay', 'minimal-ui'],
         orientation: 'portrait',
         background_color: '#ffffff',
-        theme_color: '#ff1200', // change to ff8200
+        theme_color: '#ff8200',
         icons: [
           {
             src: 'icons/icon-48x48.png',
