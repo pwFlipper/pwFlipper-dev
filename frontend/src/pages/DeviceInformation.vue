@@ -1,36 +1,70 @@
 <template>
   <q-page class="flex-center column">
-    <div class="toolbar flex no-wrap q-pa-xs">
-      <router-link class="toolbar__back" to="/">
-        <i class="q-icon notranslate material-icons" aria-hidden="true" role="presentation">arrow_back_ios_new</i>
-      </router-link>
-      <h5 class="device-name">{{ info.hardware_name }}</h5>
-    </div>
     <div class="flex-center column">
       <div v-show="flags.updateInProgress || (connected && info !== null && this.info.storage_databases_present && flags.rpcActive && info.hardware_name)" class="device-screen column">
         <div class="flex">
+          <div class="info">
+            <p>
+              <span>Firmware:</span>
+              <span>{{ info.firmware_version !== 'unknown' ? info.firmware_version : info.firmware_commit }}</span>
+            </p>
+            <p>
+              <span>Build date:</span>
+              <span>{{ info.firmware_build_date }}</span>
+            </p>
+            <p>
+              <span>SD card:</span>
+              <span>{{ info.storage_sdcard_present }}</span>
+            </p>
+            <p>
+              <span>Databases:</span>
+              <span>{{ info.storage_databases_present }}</span>
+            </p>
+            <p>
+              <span>Hardware:</span>
+              <span>{{ info.hardware_ver + '.F' + info.hardware_target + 'B' + info.hardware_body + 'C' + info.hardware_connect }}</span>
+            </p>
+            <p>
+              <span>Radio FW:</span>
+              <span>{{ info.radio_alive !== false ? info.radio_stack_major + '.' + info.radio_stack_minor + '.' + info.radio_stack_sub : 'corrupt' }}</span>
+            </p>
+            <p>
+              <span>Radio stack:</span>
+              <span>{{ radioStackType }}</span>
+            </p>
+          </div>
           <div class="column items-center">
+            <h5>{{ info.hardware_name }}</h5>
             <div
               class="flipper"
               :class="info.hardware_color === '1' ? 'body-black' : 'body-white'"
             >
-            <canvas
-              v-show="flags.screenStream"
-              :width="128 * screenScale"
-              :height="64 * screenScale"
-              style="image-rendering: pixelated;"
-              ref="screenStreamCanvas"
-            ></canvas>
+              <router-link class="display"
+                to="/device"
+                :style="'width: ' + 128 * screenScale + 'px; height: ' + 64 * screenScale + 'px;'"
+                :width="128 * screenScale"
+                :height="64 * screenScale">
+                <canvas
+                  v-show="flags.screenStream"
+                  :width="128 * screenScale"
+                  :height="64 * screenScale"
+                  style="image-rendering: pixelated;"
+                  ref="screenStreamCanvas"
+                ></canvas>
+              </router-link>
               <img v-if="flags.updateInProgress" src="../assets/flipper-screen-updating.png"/>
-              <button class="control control-up" @click="()=>handleControl(0)" type="button"></button>
-              <button class="control control-down" @click="()=>handleControl(1)" type="button"></button>
-              <button class="control control-right" @click="()=>handleControl(2)" type="button"></button>
-              <button class="control control-left" @click="()=>handleControl(3)" type="button"></button>
-              <button class="control control-ok" @click="()=>handleControl(4)" type="button"></button>
-              <button class="control control-back" @click="()=>handleControl(5)" type="button"></button>
             </div>
           </div>
         </div>
+        <Updater
+          :flipper="flipper"
+          :rpcActive="rpcActive"
+          :info="info"
+          :installFromFile="installFromFile"
+          @update="onUpdateStage"
+          @showNotif="passNotif"
+          @log="passLog"
+        />
       </div>
       <div
         v-if="!flags.updateInProgress && (!connected || info == null || !flags.rpcActive || flags.rpcToggling)"
@@ -49,10 +83,11 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
+import Updater from 'components/Updater.vue'
 import asyncSleep from 'simple-async-sleep'
 
 export default defineComponent({
-  name: 'PageDevice',
+  name: 'PageDeviceInformation',
 
   props: {
     flipper: Object,
@@ -63,6 +98,7 @@ export default defineComponent({
   },
 
   components: {
+    Updater
   },
 
   setup () {
@@ -74,7 +110,7 @@ export default defineComponent({
         screenStream: false,
         updateInProgress: false
       }),
-      screenScale: ref(2),
+      screenScale: ref(1),
       channels: ref({})
     }
   },
@@ -200,15 +236,6 @@ export default defineComponent({
         })
         return this.startScreenStream()
       }
-    },
-
-    async handleControl (key) {
-      await this.flipper.commands.gui.sendInputEvent(key, 0)
-        .catch(error => this.rpcErrorHandler(error, 'gui.sendInputEvent'))
-      await this.flipper.commands.gui.sendInputEvent(key, 2)
-        .catch(error => this.rpcErrorHandler(error, 'gui.sendInputEvent'))
-      await this.flipper.commands.gui.sendInputEvent(key, 1)
-        .catch(error => this.rpcErrorHandler(error, 'gui.sendInputEvent'))
     },
 
     async startScreenStream () {
@@ -338,67 +365,30 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .toolbar {
-    width: 100%;
-    height: 42px;
-    position: absolute;
-    top: 0;
-    align-items: center;
-    border-bottom: 0.5px solid lightgrey;
-  }
-  .toolbar__back {
-    width: 42px;
-    height: 42px;
-    text-decoration: none;
-    display: grid;
-    place-content: center;
-  }
-  .device-name {
-    margin: 0 0 0 16px;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  .flipper {
-    width: 736px;
-    height: 330px;
-    background-size: 720px;
-    padding: 60px 0 0 194px;
+  .display {
     position: relative;
+    display: block;
   }
-  .control {
-    width: 46px;
-    height: 46px;
-    border: 0;
-    background-color: transparent;
+  .display::before,
+  .display::after {
     position: absolute;
-    padding: 0;
-    border-radius: 50%;
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
   }
-  .control:hover {
+  .flipper:hover > .display::before {
     background-color: rgb(0 0 0 / 20%);
   }
-  .control-up {
-    left: 534px;
-    top: 57px;
+  .flipper:hover > .display::before,
+  .flipper:hover > .display::after {
+    background-image: url(/icons/flipper/arrow-expand.svg);
+    background-repeat: no-repeat;
+    background-position: 70% 10px;
   }
-  .control-right {
-    left: 580px;
-    top: 103px;
-  }
-  .control-down {
-    left: 534px;
-    top: 149px;
-  }
-  .control-left {
-    left: 488px;
-    top: 103px;
-  }
-  .control-ok {
-    left: 534px;
-    top: 103px;
-  }
-  .control-back {
-    left: 638px;
-    top: 151px;
+  .display::after {
+    transform: rotate(180deg)
   }
 </style>

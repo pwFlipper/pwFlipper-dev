@@ -4,7 +4,14 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/', component: () => import('pages/Device.vue') }
+      { path: '/', component: () => import('pages/DeviceInformation.vue') }
+    ]
+  },
+  {
+    path: '/device',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/device', component: () => import('pages/Device.vue') }
     ]
   },
   {
