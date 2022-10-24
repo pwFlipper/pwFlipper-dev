@@ -143,17 +143,39 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: 'my.flipper.net',
-        short_name: 'my.flipper.net',
+        name: 'pwFlipper',
+        short_name: 'pwFlipper',
+        lang: 'en-US',
         description: 'Web platform for your Flipper',
         display: 'standalone',
+        display_override: ['window-controls-overlay', 'minimal-ui'],
         orientation: 'portrait',
         background_color: '#ffffff',
-        theme_color: '#027be3',
+        theme_color: '#ff1200', // change to ff8200
         icons: [
+          {
+            src: 'icons/icon-48x48.png',
+            sizes: '48x48',
+            type: 'image/png'
+          },
+          {
+            src: 'icons/icon-72x72.png',
+            sizes: '72x72',
+            type: 'image/png'
+          },
+          {
+            src: 'icons/icon-96x96.png',
+            sizes: '96x96',
+            type: 'image/png'
+          },
           {
             src: 'icons/icon-128x128.png',
             sizes: '128x128',
+            type: 'image/png'
+          },
+          {
+            src: 'icons/icon-144x144.png',
+            sizes: '144x144',
             type: 'image/png'
           },
           {
