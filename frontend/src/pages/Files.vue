@@ -119,6 +119,42 @@
               </q-menu>
             </q-btn>
           </q-item-section>
+          <q-menu auto-close touch-position context-menu self="top middle">
+            <q-list style="min-width: 100px">
+              <q-item v-if="item.type === 0" clickable @click="itemClicked(item)">
+                <q-item-section avatar>
+                  <q-icon name="mdi-download-outline"/>
+                </q-item-section>
+                <q-item-section>
+                  Download
+                </q-item-section>
+              </q-item>
+              <q-item v-if="item.name.endsWith('.sub') || item.name.endsWith('.ir')" clickable @click="openFileIn(item, 'pulse-plotter')">
+                <q-item-section avatar>
+                  <q-icon name="mdi-share-outline"/>
+                </q-item-section>
+                <q-item-section>
+                  Open in Pulse plotter
+                </q-item-section>
+              </q-item>
+              <q-item clickable @click="editorText = item.name; oldName = item.name; flags.renamePopup = true">
+                <q-item-section avatar>
+                  <q-icon name="mdi-pencil-outline"/>
+                </q-item-section>
+                <q-item-section>
+                  Rename
+                </q-item-section>
+              </q-item>
+              <q-item clickable class="text-negative" @click="remove(path + '/' + item.name, !!item.type)">
+                <q-item-section avatar>
+                  <q-icon name="mdi-delete-outline"/>
+                </q-item-section>
+                <q-item-section>
+                  Delete
+                </q-item-section>
+              </q-item>
+            </q-list>
+              </q-menu>
         </q-item>
         <q-item v-if="dir.length === 0 && path !== '/'">
           <q-item-section avatar class="q-ml-xs">
