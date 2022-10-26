@@ -302,6 +302,15 @@
           </q-card-section>
         </q-card>
       </q-dialog>
+      <q-dialog v-model="editor.active" persistent>
+        <FileEditor
+          :path="editor.path"
+          :name="editor.name"
+          :content="editor.content"
+          @save="save"
+          @close="closeEditor"
+        ></FileEditor>
+      </q-dialog>
     </div>
   </q-page>
 </template>
@@ -310,6 +319,7 @@
 import { defineComponent, ref } from 'vue'
 import { exportFile, useQuasar } from 'quasar'
 import ProgressBar from 'components/ProgressBar.vue'
+import FileEditor from 'components/FileEditor.vue'
 import asyncSleep from 'simple-async-sleep'
 const flipperIcons = {
   'files:new': 'img:icons/flipper/action-new.svg',
@@ -333,7 +343,8 @@ export default defineComponent({
   name: 'PageFiles',
 
   components: {
-    ProgressBar
+    ProgressBar,
+    FileEditor
   },
 
   props: {
@@ -369,6 +380,12 @@ export default defineComponent({
       file: ref({
         name: '',
         progress: 0
+      }),
+      editor: ref({
+        active: false,
+        path: '',
+        name: '',
+        content: new Uint8Array()
       })
     }
   },
@@ -559,7 +576,42 @@ export default defineComponent({
       this.flags.blockingOperationPopup = false
     },
 
-    itemClicked (item) {
+    async save (file) {
+      const encoder = new TextEncoder()
+      this.flags.blockingOperationPopup = true
+
+      const unbind = this.flipper.emitter.on('storageWriteRequest/progress', e => {
+        this.file.progress = e.progress / e.total
+      })
+      await this.flipper.commands.storage.write(file.path + '/' + file.name, encoder.encode(file.content))
+        .catch(error => this.rpcErrorHandler(error, 'storage.write'))
+        .finally(() => {
+          this.$emit('log', {
+            level: 'debug',
+            message: 'Files: storage.write: ' + this.path + '/' + file.name
+          })
+        })
+      unbind()
+
+      this.list()
+      this.flags.blockingOperationPopup = false
+    },
+
+    async openEditor (path, name) {
+      this.editor.name = name
+      this.editor.path = path
+      this.editor.content = await this.read(path + '/' + name, true)
+      this.editor.active = true
+    },
+
+    closeEditor () {
+      this.editor.active = false
+      this.editor.name = ''
+      this.editor.path = ''
+      this.editor.content = new Uint8Array()
+    },
+
+    async itemClicked (item) {
       if (item.type === 1) {
         if (!this.path.endsWith('/')) {
           this.path += '/'
@@ -572,6 +624,8 @@ export default defineComponent({
           this.path = '/'
         }
         this.list()
+      } else if (item.name.match(/\.(txt|fmf|ibtn|rfid|ir|nfc|sub|u2f)$/i)) {
+        this.openEditor(this.path, item.name)
       } else {
         this.read(this.path + '/' + item.name)
       }
