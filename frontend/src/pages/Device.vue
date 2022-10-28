@@ -50,6 +50,7 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import asyncSleep from 'simple-async-sleep'
+import Mousetrap from 'mousetrap'
 
 export default defineComponent({
   name: 'PageDevice',
@@ -318,6 +319,13 @@ export default defineComponent({
   },
 
   async mounted () {
+    Mousetrap.bind('up', () => this.handleControl(0))
+    Mousetrap.bind('down', () => this.handleControl(1))
+    Mousetrap.bind('right', () => this.handleControl(2))
+    Mousetrap.bind('left', () => this.handleControl(3))
+    Mousetrap.bind(['space', 'enter'], () => this.handleControl(4))
+    Mousetrap.bind('backspace', () => this.handleControl(5))
+
     if (this.connected && this.info !== null && this.info.storage_databases_present) {
       await this.start()
     }
