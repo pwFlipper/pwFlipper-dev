@@ -65,12 +65,13 @@
           dense
           clickable
           style="border-radius: 3px;"
+          @click="itemClicked(item)"
         >
-          <q-item-section avatar @click="itemClicked(item)">
+          <q-item-section avatar >
             <q-icon :name="itemIconSwitcher(item)"/>
           </q-item-section>
 
-          <q-item-section @click="itemClicked(item)">
+          <q-item-section>
             <q-item-label>
               {{ item.name }}
             </q-item-label>
@@ -79,46 +80,6 @@
             <span v-if="item.type !== 1 && item.size" class="text-weight-light">{{ item.size }} bytes</span>
           </q-item-section>
 
-          <q-item-section avatar>
-            <q-btn flat dense round icon="more_vert">
-              <q-menu auto-close self="top middle">
-                <q-list style="min-width: 100px">
-                  <q-item v-if="item.type === 0" clickable @click="itemClicked(item)">
-                    <q-item-section avatar>
-                      <q-icon name="mdi-download-outline"/>
-                    </q-item-section>
-                    <q-item-section>
-                      Download
-                    </q-item-section>
-                  </q-item>
-                  <q-item v-if="item.name.endsWith('.sub') || item.name.endsWith('.ir')" clickable @click="openFileIn(item, 'pulse-plotter')">
-                    <q-item-section avatar>
-                      <q-icon name="mdi-share-outline"/>
-                    </q-item-section>
-                    <q-item-section>
-                      Open in Pulse plotter
-                    </q-item-section>
-                  </q-item>
-                  <q-item clickable @click="editorText = item.name; oldName = item.name; flags.renamePopup = true">
-                    <q-item-section avatar>
-                      <q-icon name="mdi-pencil-outline"/>
-                    </q-item-section>
-                    <q-item-section>
-                      Rename
-                    </q-item-section>
-                  </q-item>
-                  <q-item clickable class="text-negative" @click="remove(path + '/' + item.name, !!item.type)">
-                    <q-item-section avatar>
-                      <q-icon name="mdi-delete-outline"/>
-                    </q-item-section>
-                    <q-item-section>
-                      Delete
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-            </q-btn>
-          </q-item-section>
           <q-menu auto-close touch-position context-menu self="top middle">
             <q-list style="min-width: 100px">
               <q-item v-if="item.type === 0" clickable @click="itemClicked(item)">
